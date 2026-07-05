@@ -3,7 +3,7 @@ const path = require('path');
 const app = express();
 
 // ✅ TON VRAI WEBHOOK DIRECT
-const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1521132273410248815/eTMZ7AIT5kvCAlKHEyEm76YW-PtSf1NECog_IKX514_2RTuG_QSAX4sv8sZgPxqqWYq7';
+const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1523297468840935444/0Hq1u4X7B2UGZha98XM1f0WdBZEoJiA3uSQKPw2-YXGcPbMJ29IsYYkEDPybknuNJrjD';
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
